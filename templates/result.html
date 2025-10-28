@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pneumonia Detection Result</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border-left: 5px solid;
+        }
+
+        .result-card.normal {
+            border-left-color: #28a745;
+        }
+
+        .result-card.pneumonia {
+            border-left-color: #dc3545;
+        }
+
+        .result-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .result-card.normal .result-icon {
+            color: #28a745;
+        }
+
+        .result-card.pneumonia .result-icon {
+            color: #dc3545;
+        }
+
+        .result-label {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-card.normal .result-label {
+            color: #28a745;
+        }
+
+        .result-card.pneumonia .result-label {
+            color: #dc3545;
+        }
+
+        .confidence-bar {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .result-card.normal .confidence-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
+        .result-card.pneumonia .confidence-fill {
+            background: linear-gradient(90deg, #dc3545, #fd7e14);
+        }
+
+        .confidence-text {
+            margin-top: 10px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .details-section {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .details-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .detail-value {
+            color: #6c757d;
+        }
+
+        .warning-section {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-section h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .warning-section p {
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .file-info {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #495057;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .result-label {
+                font-size: 1.5em;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Analysis Result</h1>
+        
+        <div class="file-info">
+            <strong>📁 File:</strong> {{ image }}
+        </div>
+        
+        <div class="result-card {{ 'pneumonia' if label == 'Pneumonia' else 'normal' }}">
+            <div class="result-icon">
+                {{ '⚠️' if label == 'Pneumonia' else '✅' }}
+            </div>
+            <div class="result-label">{{ label }}</div>
+            
+            <div class="confidence-bar">
+                <div class="confidence-fill" style="width: {{ confidence }}%">
+                    {{ confidence }}%
+                </div>
+            </div>
+            
+            <div class="confidence-text">
+                Confidence Level: {{ confidence }}%
+            </div>
+        </div>
+        
+        <div class="details-section">
+            <h3>📊 Analysis Details</h3>
+            <div class="detail-item">
+                <span class="detail-label">Prediction:</span>
+                <span class="detail-value">{{ label }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Confidence:</span>
+                <span class="detail-value">{{ confidence }}%</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Pneumonia Probability:</span>
+                <span class="detail-value">{{ probability }}%</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Model:</span>
+                <span class="detail-value">CNN Deep Learning</span>
+            </div>
+        </div>
+        
+        {% if label == 'Pneumonia' %}
+        <div class="warning-section">
+            <h4>⚠️ Important Notice</h4>
+            <p>
+                The AI has detected potential signs of pneumonia in your X-ray. 
+                This result should be considered as a preliminary screening tool only. 
+                Please consult with a qualified medical professional immediately for 
+                proper diagnosis and treatment.
+            </p>
+        </div>
+        {% else %}
+        <div class="warning-section" style="background-color: #d1ecf1; border-color: #bee5eb;">
+            <h4 style="color: #0c5460;">✅ Good News</h4>
+            <p style="color: #0c5460;">
+                The AI did not detect signs of pneumonia in your X-ray. However, 
+                this result is for educational purposes only. Always consult with 
+                a medical professional for proper health assessment.
+            </p>
+        </div>
+        {% endif %}
+        
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary">🔄 Analyze Another Image</a>
+            <a href="#" class="btn btn-secondary" onclick="window.print()">🖨️ Print Result</a>
+        </div>
+    </div>
+
+    <script>
+        // Animate confidence bar on page load
+        window.addEventListener('load', function() {
+            const confidenceFill = document.querySelector('.confidence-fill');
+            const confidence = {{ confidence }};
+            confidenceFill.style.width = '0%';
+            
+            setTimeout(() => {
+                confidenceFill.style.width = confidence + '%';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+

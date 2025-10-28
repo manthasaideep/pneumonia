@@ -1,0 +1,91 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pyw
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+
+# === Virtual Environment ===
+.venv/
+env/
+venv/
+ENV/
+
+# === IDEs and Editors ===
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === Logs and temporary files ===
+*.log
+*.tmp
+*.temp
+*.bak
+
+# === Model and Checkpoints ===
+*.h5
+*.hdf5
+*.ckpt
+*.weights
+*.pth
+*.pt
+
+# === Dataset and large files ===
+dataset/
+data/
+*.zip
+*.tar
+*.tar.gz
+
+# === Output / Results / Visualizations ===
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.svg
+
+# (Optional) Keep README images if needed
+# !README*.png
+
+# === Jupyter Notebooks Checkpoints ===
+.ipynb_checkpoints/
+
+# === System / OS Files ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Misc ===
+__MACOSX/
+
+# === TensorFlow / Keras Training Files ===
+checkpoint/
+saved_model/
+events.out.tfevents*
+*.pb
+
+# === Cache / Temp directories ===
+.cache/
+.temp/
+.tmp/
+logs/
+runs/
+
+# === Backup and test data ===
+*.bak
+*.swp
+*.swo
+*.old
+*.orig
+
+# Specific model files to ignore
+best_pneumonia_model.h5
+pretrained_pneumonia_model.h5
