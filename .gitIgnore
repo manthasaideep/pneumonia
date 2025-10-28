@@ -87,5 +87,4 @@ runs/
 *.orig
 
 # Specific model files to ignore
-best_pneumonia_model.h5
 pretrained_pneumonia_model.h5
