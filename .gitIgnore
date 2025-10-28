@@ -85,6 +85,3 @@ runs/
 *.swo
 *.old
 *.orig
-
-# Specific model files to ignore
-pretrained_pneumonia_model.h5
